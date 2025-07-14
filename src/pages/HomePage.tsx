@@ -17,18 +17,21 @@ export interface IPokemonListData {
 
 interface homePageState {
   itemsList: IPokemonData[];
+  isLoading: boolean;
 }
 
 class HomePage extends React.Component {
   state: homePageState = {
     itemsList: [],
+    isLoading: true,
   };
 
-  searchPokemon = async (pokemonData: IPokemonBasicInfo) => {
-    const pokemonList: IPokemonData = await fetchPokemonData(pokemonData);
-
+  searchPokemon = async (pokemonData: IPokemonBasicInfo[]) => {
+    const pokemonList: IPokemonData[] = await Promise.all(
+      pokemonData.map((item: IPokemonBasicInfo) => fetchPokemonData(item))
+    );
     this.setState({
-      itemsList: [pokemonList],
+      itemsList: pokemonList,
     });
   };
 
