@@ -1,34 +1,25 @@
 import React, { type ChangeEvent } from 'react';
-import type { IPokemonListData } from '../../pages/HomePage.tsx';
-import type { IPokemonBasicInfo } from '../../utils/fetchPokemonData.ts';
 import ErrorButton from '../ErrorButton.tsx';
 import { getDataFromLS, saveDataInLS } from '../../helpers/localStorage.ts';
-
-interface PokemonBasic {
-  name: string;
-  url: string;
-}
-
-interface PokemonFull {
-  name: string;
-  sprites: {
-    front_default: string;
-  };
-  types: { type: { name: string } }[];
-  height: number;
-  weight: number;
-}
+import {
+  fetchPokemonResponseData,
+  type IPokemonBasicInfo,
+  type IPokemonResponseData,
+} from '../../services/pokemon.service.ts';
 
 interface State {
-  allPokemon: PokemonBasic[];
-  filteredPokemon: PokemonBasic[];
+  allPokemon: IPokemonBasicInfo[];
+  filteredPokemon: IPokemonBasicInfo[];
   inputValue: string;
-  selectedPokemon: PokemonFull | null;
+  selectedPokemon: string | null;
   error: string;
 }
 
 class ControlBlock extends React.Component<
-  { searchPokemon: (pokemonData: IPokemonBasicInfo[]) => void },
+  {
+    searchPokemon: (pokemonName: string) => void;
+    showAllPokemonList: () => void;
+  },
   State
 > {
   state: State = {
@@ -41,15 +32,14 @@ class ControlBlock extends React.Component<
 
   async componentDidMount() {
     try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0');
-      const allPokemonData: IPokemonListData = await response.json();
+      const allPokemonData: IPokemonResponseData = await fetchPokemonResponseData(100000);
       const storageData = getDataFromLS('inputValue');
       this.setState({
         allPokemon: allPokemonData.results,
         inputValue: storageData ?? '',
       });
     } catch (error) {
-      console.log('Error loading list of Pokemon', error);
+      console.log('Error loading list of Pokemon for helping search:', error);
     }
   }
 
@@ -84,35 +74,19 @@ class ControlBlock extends React.Component<
       return;
     }
 
-    if (name === this.state.selectedPokemon?.name) {
+    if (name === this.state.selectedPokemon?.toLowerCase()) {
       this.setState({ error: 'Enter another Pokemon Name' });
       return;
     }
 
-    this.setState({ error: '', selectedPokemon: null });
+    this.setState({ error: '', selectedPokemon: name, filteredPokemon: [] });
 
-    fetch(`https://pokeapi.co/api/v2/pokemon/${name}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Pokemon not found');
-        return res.json();
-      })
-      .then((data: PokemonFull) => {
-        this.setState({ selectedPokemon: data });
-        this.props.searchPokemon([
-          {
-            name: data.name,
-            url: `https://pokeapi.co/api/v2/pokemon/${name}`,
-          },
-        ]);
-      })
-      .catch((err) => {
-        this.setState({ error: err.message });
-      });
+    this.props.searchPokemon(name);
   };
 
   showAllPokemon = () => {
-    this.props.searchPokemon(this.state.allPokemon.slice(0, 20));
-    this.setState({ selectedPokemon: null, error: '' });
+    this.props.showAllPokemonList();
+    this.setState({ selectedPokemon: null, error: '', inputValue: '', filteredPokemon: [] });
   };
 
   render() {

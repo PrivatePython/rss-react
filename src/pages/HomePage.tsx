@@ -4,58 +4,81 @@ import ControlBlock from '../Components/ControlBlock/ControlBlock.tsx';
 import CardList from '../Components/CardList/CardList.tsx';
 import {
   fetchPokemonData,
-  type IPokemonBasicInfo,
+  fetchPokemonDataList,
+  fetchPokemonResponseData,
   type IPokemonData,
-} from '../utils/fetchPokemonData.ts';
+} from '../services/pokemon.service.ts';
 
-export interface IPokemonListData {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: IPokemonBasicInfo[];
-}
-
-interface homePageState {
+interface IHomePageState {
   itemsList: IPokemonData[];
   isLoading: boolean;
+  error: string | null;
 }
 
 class HomePage extends React.Component {
-  state: homePageState = {
+  state: IHomePageState = {
     itemsList: [],
     isLoading: true,
+    error: null,
   };
 
-  searchPokemon = async (pokemonData: IPokemonBasicInfo[]) => {
-    const pokemonList: IPokemonData[] = await Promise.all(
-      pokemonData.map((item: IPokemonBasicInfo) => fetchPokemonData(item))
-    );
-    this.setState({
-      itemsList: pokemonList,
-    });
+  showAllPokemonList = async () => {
+    try {
+      this.setState({
+        isLoading: true,
+      });
+      const pokemonResponseData = await fetchPokemonResponseData();
+      const pokemonList = await fetchPokemonDataList(pokemonResponseData.results);
+      this.setState({
+        itemsList: pokemonList,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const err = error as Error;
+      this.setState({
+        isLoading: false,
+        error: `Error with load pokemon: ${err.message}`,
+      });
+    }
+  };
+
+  searchPokemon = async (pokemonName: string) => {
+    try {
+      this.setState({
+        isLoading: true,
+      });
+      const pokemonData: IPokemonData = await fetchPokemonData({
+        name: pokemonName,
+        url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}`,
+      });
+      this.setState({
+        itemsList: [pokemonData],
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({
+        error: 'Pokemon Not Found!',
+        isLoading: false,
+      });
+    }
   };
 
   async componentDidMount() {
-    try {
-      const responsePokemonBasicInfo = await fetch('https://pokeapi.co/api/v2/pokemon/');
-      const pokemonBasicInfo: IPokemonListData = await responsePokemonBasicInfo.json();
-      const pokemonList: IPokemonData[] = await Promise.all(
-        pokemonBasicInfo.results.map((item: IPokemonBasicInfo) => fetchPokemonData(item))
-      );
-
-      this.setState({
-        itemsList: pokemonList,
-      });
-    } catch (error) {
-      console.error('Error with load pokemon:', error);
-    }
+    await this.showAllPokemonList();
   }
 
   render() {
     return (
-      <Layout>
-        <ControlBlock searchPokemon={this.searchPokemon} />
-        <CardList itemsList={this.state.itemsList} />
+      <Layout isLoading={this.state.isLoading}>
+        <ControlBlock
+          searchPokemon={this.searchPokemon}
+          showAllPokemonList={this.showAllPokemonList}
+        />
+        {this.state.error && <h4 className="mt-3">{this.state.error}</h4>}
+        {!this.state.error && <CardList itemsList={this.state.itemsList} />}
       </Layout>
     );
   }

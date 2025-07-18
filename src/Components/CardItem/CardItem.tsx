@@ -1,5 +1,5 @@
 import React from 'react';
-import type { IPokemonData } from '../../utils/fetchPokemonData.ts';
+import type { IPokemonData } from '../../services/pokemon.service.ts';
 
 interface ICardItemProps {
   pokemonData: IPokemonData;

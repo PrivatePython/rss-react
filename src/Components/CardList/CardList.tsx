@@ -1,6 +1,6 @@
 import React from 'react';
 import CardItem from '../CardItem/CardItem.tsx';
-import type { IPokemonData } from '../../utils/fetchPokemonData.ts';
+import type { IPokemonData } from '../../services/pokemon.service.ts';
 
 interface CardListProps {
   itemsList: IPokemonData[];
