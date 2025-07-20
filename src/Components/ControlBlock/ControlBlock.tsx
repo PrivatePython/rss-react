@@ -97,6 +97,7 @@ class ControlBlock extends React.Component<
         <div className="w-full mx-auto p-4 bg-white rounded-2xl shadow space-y-4">
           <div className="flex gap-2">
             <input
+              data-testid="search-pokemon-input"
               type="text"
               value={inputValue}
               onChange={this.handleInputChange}
@@ -104,6 +105,7 @@ class ControlBlock extends React.Component<
               className="w-full p-2 border rounded"
             />
             <button
+              data-testid="search-pokemon-button"
               onClick={this.handleSearch}
               className="cursor-pointer rounded-md bg-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-500 focus:shadow-none active:bg-blue-300 hover:bg-blue-400 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             >
@@ -125,10 +127,15 @@ class ControlBlock extends React.Component<
             </ul>
           )}
 
-          {error && <p className="text-red-500 text-center">{error}</p>}
+          {error && (
+            <p data-testid="error-search-input" className="text-red-500 text-center">
+              {error}
+            </p>
+          )}
         </div>
         <div className="grid grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))] grid-flow-dense gap-2">
           <button
+            data-testid="show-all-pokemon-button"
             className="cursor-pointer w-full rounded-md bg-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-500 focus:shadow-none active:bg-blue-300 hover:bg-blue-400 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             onClick={this.showAllPokemon}
           >

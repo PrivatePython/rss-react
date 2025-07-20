@@ -65,17 +65,6 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
       ? 'gray'
       : speciesData.color.name;
 
-  console.log('data', {
-    name: baseData.name,
-    id: baseData.id,
-    sprites: baseData.sprites,
-    types: baseData.types,
-    height: baseData.height,
-    weight: baseData.weight,
-    description,
-    color,
-  });
-
   return {
     name: baseData.name,
     id: baseData.id,
@@ -87,4 +76,3 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     color,
   };
 }
-export const pokemonService = { fetchPokemonData, fetchPokemonResponseData, fetchPokemonDataList };
