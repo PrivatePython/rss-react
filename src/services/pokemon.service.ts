@@ -47,10 +47,8 @@ export async function fetchPokemonDataList(
 export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemonData> {
   const pokemonRes = await fetch(item.url);
   const baseData: PokemonFull = await pokemonRes.json();
-
   const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${item.name}`);
   const speciesData = await speciesRes.json();
-
   const flavor = speciesData.flavor_text_entries.find(
     (entry: {
       flavor_text: string;
@@ -67,6 +65,17 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
       ? 'gray'
       : speciesData.color.name;
 
+  console.log('data', {
+    name: baseData.name,
+    id: baseData.id,
+    sprites: baseData.sprites,
+    types: baseData.types,
+    height: baseData.height,
+    weight: baseData.weight,
+    description,
+    color,
+  });
+
   return {
     name: baseData.name,
     id: baseData.id,
@@ -78,3 +87,4 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     color,
   };
 }
+export const pokemonService = { fetchPokemonData, fetchPokemonResponseData, fetchPokemonDataList };
