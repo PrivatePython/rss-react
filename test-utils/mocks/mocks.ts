@@ -53,6 +53,7 @@ export const fakeSpeciesDataWithoutDescriptionAndColor = {
 export const list: IPokemonBasicInfo[] = [
   { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
 ];
+
 export const mockResults = [
   {
     color: 'green',
