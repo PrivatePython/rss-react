@@ -1,4 +1,4 @@
-import { getDataFromLS, saveDataInLS } from '../src/helpers/localStorage.ts';
+import { getDataFromLocalStorage, saveDataInLocalStorage } from '../src/helpers/localStorage.ts';
 
 describe('local storage', () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('local storage', () => {
     const key = 'key';
     const value = 'value';
 
-    saveDataInLS(key, value);
+    saveDataInLocalStorage(key, value);
 
     expect(localStorage.getItem(key)).toEqual(JSON.stringify(value));
   });
@@ -20,10 +20,10 @@ describe('local storage', () => {
 
     localStorage.setItem(key, JSON.stringify(value));
 
-    expect(getDataFromLS(key)).toEqual(value);
+    expect(getDataFromLocalStorage(key)).toEqual(value);
   });
 
   it("should return null if data doesn't exists", () => {
-    expect(getDataFromLS('nonExistingKey')).toBeNull();
+    expect(getDataFromLocalStorage('nonExistingKey')).toBeNull();
   });
 });

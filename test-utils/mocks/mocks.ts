@@ -22,6 +22,10 @@ export const fakeBaseData = {
   types: [{ type: { name: 'grass' } }],
   height: 7,
   weight: 69,
+  species: {
+    name: 'bulbasaur',
+    url: 'https://pokeapi.co/api/v2/spcies/1/',
+  },
 };
 
 export const fakeSpeciesData = {
@@ -72,5 +76,9 @@ export const mockResults = [
       },
     ],
     weight: 69,
+    species: {
+      name: 'bulbasaur',
+      url: 'https://pokeapi.co/api/v2/spcies/1/',
+    },
   },
 ];

@@ -5,7 +5,7 @@ export interface IPokemonResponseData {
   results: IPokemonBasicInfo[];
 }
 
-interface PokemonFull {
+interface IPokemonFull {
   id: number;
   name: string;
   sprites: {
@@ -14,9 +14,13 @@ interface PokemonFull {
   types: { type: { name: string } }[];
   height: number;
   weight: number;
+  species: {
+    name: string;
+    url: string;
+  };
 }
 
-export interface IPokemonData extends PokemonFull {
+export interface IPokemonData extends IPokemonFull {
   description?: string;
   color: string;
 }
@@ -46,8 +50,8 @@ export async function fetchPokemonDataList(
 
 export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemonData> {
   const pokemonRes = await fetch(item.url);
-  const baseData: PokemonFull = await pokemonRes.json();
-  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${item.name}`);
+  const baseData: IPokemonFull = await pokemonRes.json();
+  const speciesRes = await fetch(baseData.species.url);
   const speciesData = await speciesRes.json();
   const flavor = speciesData.flavor_text_entries.find(
     (entry: {
@@ -72,6 +76,7 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     types: baseData.types,
     height: baseData.height,
     weight: baseData.weight,
+    species: baseData.species,
     description,
     color,
   };
