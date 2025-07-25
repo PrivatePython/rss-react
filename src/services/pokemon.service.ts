@@ -47,10 +47,8 @@ export async function fetchPokemonDataList(
 export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemonData> {
   const pokemonRes = await fetch(item.url);
   const baseData: PokemonFull = await pokemonRes.json();
-
   const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${item.name}`);
   const speciesData = await speciesRes.json();
-
   const flavor = speciesData.flavor_text_entries.find(
     (entry: {
       flavor_text: string;
