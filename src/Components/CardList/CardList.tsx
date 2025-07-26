@@ -7,7 +7,6 @@ interface ICardListProps {
 }
 
 const CardList: React.FC<ICardListProps> = ({ itemsList }) => {
-  console.log(itemsList);
   return (
     <div className="grid grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))] grid-flow-dense gap-2">
       {itemsList.map((item) => {

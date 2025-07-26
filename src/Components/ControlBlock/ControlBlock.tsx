@@ -1,6 +1,6 @@
 import React, { type ChangeEvent, useEffect, useState } from 'react';
 import ErrorButton from '../ErrorButton.tsx';
-import { getDataFromLocalStorage, saveDataInLocalStorage } from '../../helpers/localStorage.ts';
+import { useLocalStorage } from '../../hooks/useLocalStorage.hooks.ts';
 import {
   fetchPokemonResponseData,
   type IPokemonBasicInfo,
@@ -29,17 +29,16 @@ const initialState: IState = {
 };
 
 const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPokemonList }) => {
-  const [state, setState] = useState<IState>(initialState);
+  const [storageData, saveStorageData] = useLocalStorage<string>('inputValue');
+  const [state, setState] = useState<IState>({ ...initialState, inputValue: storageData ?? '' });
 
   useEffect(() => {
     const getAllPokemonList = async () => {
       try {
         const allPokemonData: IPokemonResponseData = await fetchPokemonResponseData(100000);
-        const storageData = getDataFromLocalStorage('inputValue');
         setState((prevState: IState) => ({
           ...prevState,
           allPokemon: allPokemonData.results,
-          inputValue: storageData ?? '',
         }));
       } catch (error) {
         console.log('Error loading list of Pokemon for helping search:', error);
@@ -74,7 +73,7 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
   };
 
   const handleSearch = () => {
-    saveDataInLocalStorage('inputValue', state.inputValue);
+    saveStorageData(state.inputValue);
     const name = state.inputValue.trim().toLowerCase();
 
     if (!name) {
