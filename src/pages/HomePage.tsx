@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../Components/Layout/Layout.tsx';
 import ControlBlock from '../Components/ControlBlock/ControlBlock.tsx';
 import CardList from '../Components/CardList/CardList.tsx';
 import {
@@ -9,6 +8,8 @@ import {
   type IPokemonData,
 } from '../services/pokemon.service.ts';
 import PaginationBlock from '../Components/PaginationBlock/PaginationBlock.tsx';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import Loader from '../Components/Loader.tsx';
 
 interface IHomePageState {
   itemsList: IPokemonData[];
@@ -29,11 +30,19 @@ const initialHomePageState = {
 };
 
 const HomePage: React.FC = () => {
-  const [state, setState] = useState<IHomePageState>(initialHomePageState);
+  const navigate = useNavigate();
+  const { page } = useParams();
+  const [state, setState] = useState<IHomePageState>(() => ({
+    ...initialHomePageState,
+  }));
 
   useEffect(() => {
-    showPokemonListOfCurrentPage().then();
-  }, []);
+    if (page && !page.startsWith('0') && !Number.isNaN(page) && Number.isInteger(Number(page))) {
+      showPokemonListOfCurrentPage(Number(page));
+    } else {
+      navigate('/not-found', { replace: true });
+    }
+  }, [page]);
 
   const showPokemonListOfCurrentPage = async (page: number = 1) => {
     try {
@@ -43,7 +52,11 @@ const HomePage: React.FC = () => {
       }));
       const pokemonResponseData = await fetchPokemonResponseData(state.limit, page * state.limit);
       const pokemonList = await fetchPokemonDataList(pokemonResponseData.results);
-      const totalPageCount = Math.ceil(pokemonResponseData.count / state.limit);
+      const totalPageCount = Math.floor(pokemonResponseData.count / state.limit);
+      if (page > totalPageCount || page < 1) {
+        navigate('/not-found', { replace: true });
+        return;
+      }
       setState((prevState) => ({
         ...prevState,
         itemsList: pokemonList,
@@ -90,30 +103,32 @@ const HomePage: React.FC = () => {
       }));
     }
   };
-  const changePage = async (page: number) => {
-    await showPokemonListOfCurrentPage(page);
-  };
 
   return (
-    <Layout isLoading={state.isLoading}>
-      <ControlBlock
-        searchPokemon={searchPokemon}
-        showAllPokemonList={showPokemonListOfCurrentPage}
-      />
-      {state.error && <h4 className="mt-3">{state.error}</h4>}
-      {!state.error && (
-        <>
-          <CardList itemsList={state.itemsList} />
-          {!!state.totalPageCount && (
-            <PaginationBlock
-              changePage={changePage}
-              currentPage={state.currentPage}
-              totalPageCount={state.totalPageCount}
-            />
+    <>
+      {state.isLoading && <Loader />}
+      <div className="flex gap-2  items-center">
+        <div className="grow overflow-y-auto flex flex-col items-center gap-2">
+          <ControlBlock
+            searchPokemon={searchPokemon}
+            showAllPokemonList={showPokemonListOfCurrentPage}
+          />
+          {state.error && <h4 className="mt-3">{state.error}</h4>}
+          {!state.error && (
+            <>
+              <CardList itemsList={state.itemsList} />
+              {!!state.totalPageCount && (
+                <PaginationBlock
+                  currentPage={state.currentPage}
+                  totalPageCount={state.totalPageCount}
+                />
+              )}
+            </>
           )}
-        </>
-      )}
-    </Layout>
+        </div>
+        <Outlet />
+      </div>
+    </>
   );
 };
 

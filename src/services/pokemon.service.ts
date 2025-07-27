@@ -23,6 +23,11 @@ interface IPokemonFull {
 export interface IPokemonData extends IPokemonFull {
   description?: string;
   color: string;
+  gender: string;
+  capture_rate: number;
+  base_happiness: number;
+  is_legendary: boolean;
+  is_baby: boolean;
 }
 
 export interface IPokemonBasicInfo {
@@ -68,6 +73,12 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     !speciesData.color?.name || speciesData.color.name === 'white'
       ? 'gray'
       : speciesData.color.name;
+  const gender =
+    speciesData.gender_rate === 8
+      ? 'female'
+      : speciesData.gender_rate === -1
+        ? 'male'
+        : 'genderless';
 
   return {
     name: baseData.name,
@@ -79,5 +90,10 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     species: baseData.species,
     description,
     color,
+    gender,
+    capture_rate: speciesData.capture_rate,
+    base_happiness: speciesData.base_happiness,
+    is_legendary: speciesData.is_legendary,
+    is_baby: speciesData.is_baby,
   };
 }

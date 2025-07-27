@@ -1,17 +1,15 @@
 import React from 'react';
 import Header from './Header.tsx';
 import Main from './Main.tsx';
-import Loader from '../Loader.tsx';
+import { Outlet } from 'react-router-dom';
 
-const Layout: React.FC<React.PropsWithChildren<{ isLoading: boolean }>> = ({
-  isLoading,
-  children,
-}) => {
+const Layout: React.FC = () => {
   return (
     <div className="contain-layout flex flex-col h-screen">
-      {isLoading && <Loader />}
       <Header />
-      <Main>{children}</Main>
+      <Main>
+        <Outlet />
+      </Main>
     </div>
   );
 };
