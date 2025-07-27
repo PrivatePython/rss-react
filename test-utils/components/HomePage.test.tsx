@@ -14,6 +14,10 @@ const mockPokemonList = [
     weight: 69,
     description: 'A strange seed was planted.',
     color: 'green',
+    species: {
+      name: 'bulbasaur',
+      url: 'https://pokeapi.com/v2/species/bulbasaur',
+    },
   },
 ];
 

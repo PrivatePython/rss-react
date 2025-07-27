@@ -17,7 +17,7 @@ interface IState {
 
 interface IControlBlockProps {
   searchPokemon: (pokemonName: string) => void;
-  showAllPokemonList: () => void;
+  showAllPokemonList: (limit?: number, offset?: number) => void;
 }
 
 const initialState: IState = {

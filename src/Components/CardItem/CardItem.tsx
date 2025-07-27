@@ -13,7 +13,11 @@ const CardItem: React.FC<ICardItemProps> = ({ pokemonData }) => {
         style={{ boxShadow: `inset 9px 5px 82px -50px ${pokemonData.color}` }}
       >
         <h2 className="text-xl font-semibold capitalize">{pokemonData.name}</h2>
-        <img src={pokemonData.sprites.front_default} alt={pokemonData.name} className="mx-auto" />
+        <img
+          src={pokemonData.sprites.front_default}
+          alt={pokemonData.name}
+          className="mx-auto min-h-24"
+        />
         <p>{pokemonData.description}</p>
         <div className="flex gap-1 justify-center">
           {pokemonData.types.map((t) => (
