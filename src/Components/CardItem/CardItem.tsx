@@ -16,10 +16,10 @@ const CardItem: React.FC<ICardItemProps> = ({ pokemonData }) => {
         <img
           src={pokemonData.sprites.front_default}
           alt={pokemonData.name}
-          className="mx-auto min-h-24"
+          className="mx-auto min-h-24 rounded-sm max-h-30"
         />
         <p>{pokemonData.description}</p>
-        <div className="flex gap-1 justify-center">
+        <div className="flex gap-1 justify-center flex-wrap">
           {pokemonData.types.map((t) => (
             <p
               key={'type-' + pokemonData.name + Math.random()}
