@@ -40,7 +40,14 @@ const AboutPage: React.FC = () => {
 
       <p className="text-lg text-gray-700 leading-relaxed mb-4">
         Welcome to the Pokémon Application! This project was created as part of the{' '}
-        <a className="cursor-pointer underline text-lg">Rolling Scopes School React course.</a>
+        <a
+          href="https://rs.school/courses/reactjs"
+          target="_blank"
+          rel="noreferrer"
+          className="cursor-pointer underline text-lg text-red-500"
+        >
+          Rolling Scopes School React course.
+        </a>
       </p>
 
       <div className="flex max-w-75 justify-center items-center mx-auto  mb-4">
