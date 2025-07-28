@@ -16,6 +16,7 @@ const CardItem: React.FC<ICardItemProps> = ({ pokemonData }) => {
         className="cursor-pointer text-center w-full min-h-20 bg-white rounded-lg shadow-sm flex flex-col gap-1 p-3"
         style={{ boxShadow: `inset 9px 5px 82px -50px ${pokemonData.color}` }}
         onClick={() => {
+          if (pokemonData.name === 'Pavel Putyrski') return;
           const match = pokemonData.species.url.match(/(\d+)\/$/);
           const detail = match ? match[1] : null;
           navigate(`/${page}/${detail}`);

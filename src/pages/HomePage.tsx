@@ -37,7 +37,12 @@ const HomePage: React.FC = () => {
   }));
 
   useEffect(() => {
-    if (page && !page.startsWith('0') && !Number.isNaN(page) && Number.isInteger(Number(page))) {
+    if (
+      page &&
+      !page.startsWith('0') &&
+      !Number.isNaN(Number(page)) &&
+      Number.isInteger(Number(page))
+    ) {
       showPokemonListOfCurrentPage(Number(page));
     } else {
       navigate('/not-found', { replace: true });

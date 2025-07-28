@@ -1,7 +1,7 @@
-import type { IPokemonBasicInfo } from '../../src/services/pokemon.service.ts';
+import type { IPokemonBasicInfo, IPokemonData } from '../../src/services/pokemon.service.ts';
 
 export const fakeResponse = {
-  count: 1,
+  count: 1000,
   next: null,
   previous: null,
   results: [{ name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' }],
@@ -36,6 +36,11 @@ export const fakeSpeciesData = {
     },
   ],
   color: { name: 'green' },
+  gender_rate: -1,
+  capture_rate: 12,
+  base_happiness: 12,
+  is_legendary: true,
+  is_baby: true,
 };
 
 export const basicInfo = { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' };
@@ -58,7 +63,7 @@ export const list: IPokemonBasicInfo[] = [
   { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
 ];
 
-export const mockResults = [
+export const mockResults: IPokemonData[] = [
   {
     color: 'green',
     description: 'A strange seed was planted.',
@@ -80,5 +85,10 @@ export const mockResults = [
       name: 'bulbasaur',
       url: 'https://pokeapi.co/api/v2/spcies/1/',
     },
+    gender: 'genderless',
+    capture_rate: 12,
+    base_happiness: 12,
+    is_legendary: true,
+    is_baby: true,
   },
 ];

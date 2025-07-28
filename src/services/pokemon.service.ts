@@ -77,8 +77,8 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     speciesData.gender_rate === 8
       ? 'female'
       : speciesData.gender_rate === -1
-        ? 'male'
-        : 'genderless';
+        ? 'genderless'
+        : 'male';
 
   return {
     name: baseData.name,

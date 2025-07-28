@@ -1,7 +1,7 @@
 import ErrorBoundary from '../../src/Components/ErrorBoundary.tsx';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import App from '../../src/App.tsx';
 import { expect } from 'vitest';
+import ErrorButton from '../../src/Components/ErrorButton.tsx';
 
 describe('ErrorBoundary', () => {
   it('Should be renders children when no error', () => {
@@ -17,7 +17,7 @@ describe('ErrorBoundary', () => {
   it('displays fallback UI on error', () => {
     render(
       <ErrorBoundary>
-        <App />
+        <ErrorButton />
       </ErrorBoundary>
     );
 
@@ -31,7 +31,7 @@ describe('ErrorBoundary', () => {
   it('resets error state when reset button is clicked', async () => {
     render(
       <ErrorBoundary>
-        <App />
+        <ErrorButton />
       </ErrorBoundary>
     );
     fireEvent.click(screen.getByTestId('error-button'));

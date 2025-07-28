@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import HomePage from '../../src/pages/HomePage.tsx';
 import * as pokemonService from '../../src/services/pokemon.service';
 import { fakeBaseData, fakeResponse, fakeSpeciesData } from '../mocks/mocks.ts';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 const mockPokemonList = [
   {
@@ -18,8 +19,24 @@ const mockPokemonList = [
       name: 'bulbasaur',
       url: 'https://pokeapi.com/v2/species/bulbasaur',
     },
+    gender: 'genderless',
+    capture_rate: 12,
+    base_happiness: 12,
+    is_legendary: true,
+    is_baby: true,
   },
 ];
+
+const renderWithRouter = (initialPath = '/1') => {
+  return render(
+    <MemoryRouter initialEntries={[initialPath]}>
+      <Routes>
+        <Route path="/:page" element={<HomePage />} />
+        <Route path="/not-found" element={<div>Not Found Page</div>} />
+      </Routes>
+    </MemoryRouter>
+  );
+};
 
 describe('HomePage', () => {
   beforeEach(() => {
@@ -30,7 +47,7 @@ describe('HomePage', () => {
     vi.spyOn(pokemonService, 'fetchPokemonResponseData').mockResolvedValue(fakeResponse);
     vi.spyOn(pokemonService, 'fetchPokemonDataList').mockResolvedValue(mockPokemonList);
 
-    render(<HomePage />);
+    renderWithRouter('/1');
 
     expect(screen.getByTestId('loader-image'));
 
@@ -43,7 +60,7 @@ describe('HomePage', () => {
   it('shows error message on failure', async () => {
     vi.spyOn(pokemonService, 'fetchPokemonResponseData').mockRejectedValue(new Error('Fail'));
 
-    render(<HomePage />);
+    renderWithRouter('/1');
 
     await waitFor(() => {
       expect(screen.getByText(/error with load pokemon/i)).toBeInTheDocument();
@@ -55,8 +72,13 @@ describe('HomePage', () => {
       ...fakeBaseData,
       description: fakeSpeciesData.flavor_text_entries[0].flavor_text,
       color: fakeSpeciesData.color.name,
+      gender: 'genderless',
+      capture_rate: 12,
+      base_happiness: 12,
+      is_legendary: true,
+      is_baby: true,
     });
-    render(<HomePage />);
+    renderWithRouter('/1');
 
     const input = screen.getByTestId('search-pokemon-input');
     fireEvent.change(input, { target: { value: 'bulbasaur' } });
@@ -72,7 +94,7 @@ describe('HomePage', () => {
   it('should searchPokemon return error', async () => {
     vi.spyOn(pokemonService, 'fetchPokemonData').mockRejectedValue(new Error('Pokemon Not Found!'));
 
-    render(<HomePage />);
+    renderWithRouter('/1');
 
     const input = screen.getByTestId('search-pokemon-input');
     fireEvent.change(input, { target: { value: 'bulbasa' } });

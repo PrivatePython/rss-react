@@ -4,7 +4,7 @@ import Loader from '../Components/Loader.tsx';
 import { fetchPokemonData, type IPokemonData } from '../services/pokemon.service.ts';
 
 const CardDetailPage: React.FC = () => {
-  const { detail } = useParams();
+  const { detail, page } = useParams();
   const navigate = useNavigate();
   const [pokemonData, setPokemonData] = useState<IPokemonData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,21 +16,21 @@ const CardDetailPage: React.FC = () => {
     ) {
       navigate('/not-found');
       return;
-    }
-
-    fetchPokemonData({
-      name: 'name',
-      url: `https://pokeapi.co/api/v2/pokemon/${detail}`,
-    })
-      .then((data) => {
-        setPokemonData(data);
-        setIsLoading(false);
+    } else {
+      fetchPokemonData({
+        name: 'name',
+        url: `https://pokeapi.co/api/v2/pokemon/${detail}`,
       })
-      .catch((err) => {
-        console.error(err);
-        setIsLoading(false);
-        navigate('/not-found');
-      });
+        .then((data) => {
+          setPokemonData(data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+          navigate('/not-found');
+        });
+    }
   }, [detail]);
 
   if (!pokemonData) return null;
@@ -44,6 +44,14 @@ const CardDetailPage: React.FC = () => {
             className="sticky top-2/8 text-center w-full min-h-20 bg-white rounded-lg shadow-sm flex flex-col gap-1 p-3"
             style={{ boxShadow: `inset 9px 5px 82px -50px ${pokemonData.color}` }}
           >
+            <button
+              className="outline-2 rounded-xl absolute right-1 top-1 cursor-pointer w-6 h-6 align-baseline"
+              onClick={() => {
+                navigate(`/${page}`);
+              }}
+            >
+              X
+            </button>
             <h2 className="text-xl font-semibold capitalize">{pokemonData.name}</h2>
             <img
               src={pokemonData.sprites.front_default}

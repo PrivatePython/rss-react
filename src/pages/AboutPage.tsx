@@ -26,6 +26,11 @@ const developerCard: IPokemonData = {
     { type: { name: 'UI Library' } },
     { type: { name: 'and more...' } },
   ],
+  gender: 'male',
+  capture_rate: 20,
+  base_happiness: 80,
+  is_legendary: true,
+  is_baby: false,
 };
 
 const AboutPage: React.FC = () => {
@@ -34,8 +39,8 @@ const AboutPage: React.FC = () => {
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">About This App</h1>
 
       <p className="text-lg text-gray-700 leading-relaxed mb-4">
-        Welcome to the Pokémon Application! This project was created as part of the Rolling Scopes
-        School React course.
+        Welcome to the Pokémon Application! This project was created as part of the{' '}
+        <a className="cursor-pointer underline text-lg">Rolling Scopes School React course.</a>
       </p>
 
       <div className="flex max-w-75 justify-center items-center mx-auto  mb-4">
