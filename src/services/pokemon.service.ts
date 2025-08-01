@@ -24,10 +24,10 @@ export interface IPokemonData extends IPokemonFull {
   description?: string;
   color: string;
   gender: string;
-  capture_rate: number;
-  base_happiness: number;
-  is_legendary: boolean;
-  is_baby: boolean;
+  captureRate: number;
+  baseHappiness: number;
+  isLegendary: boolean;
+  isBaby: boolean;
 }
 
 export interface IPokemonBasicInfo {
@@ -91,9 +91,9 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     description,
     color,
     gender,
-    capture_rate: speciesData.capture_rate,
-    base_happiness: speciesData.base_happiness,
-    is_legendary: speciesData.is_legendary,
-    is_baby: speciesData.is_baby,
+    captureRate: speciesData.capture_rate,
+    baseHappiness: speciesData.base_happiness,
+    isLegendary: speciesData.is_legendary,
+    isBaby: speciesData.is_baby,
   };
 }

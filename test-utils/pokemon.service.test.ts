@@ -51,11 +51,11 @@ describe('fetchPokemonData', () => {
       ...fakeBaseData,
       description: fakeSpeciesData.flavor_text_entries[0].flavor_text,
       color: fakeSpeciesData.color.name,
-      base_happiness: 12,
-      capture_rate: 12,
+      baseHappiness: 12,
+      captureRate: 12,
       gender: 'genderless',
-      is_baby: true,
-      is_legendary: true,
+      isBaby: true,
+      isLegendary: true,
     });
   });
 

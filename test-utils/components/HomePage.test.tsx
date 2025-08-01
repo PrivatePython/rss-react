@@ -4,8 +4,9 @@ import HomePage from '../../src/pages/HomePage.tsx';
 import * as pokemonService from '../../src/services/pokemon.service';
 import { fakeBaseData, fakeResponse, fakeSpeciesData } from '../mocks/mocks.ts';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import type { IPokemonData } from '../../src/services/pokemon.service';
 
-const mockPokemonList = [
+const mockPokemonList: IPokemonData[] = [
   {
     id: 1,
     name: 'bulbasaur',
@@ -20,10 +21,10 @@ const mockPokemonList = [
       url: 'https://pokeapi.com/v2/species/bulbasaur',
     },
     gender: 'genderless',
-    capture_rate: 12,
-    base_happiness: 12,
-    is_legendary: true,
-    is_baby: true,
+    captureRate: 12,
+    baseHappiness: 12,
+    isLegendary: true,
+    isBaby: true,
   },
 ];
 
@@ -73,10 +74,10 @@ describe('HomePage', () => {
       description: fakeSpeciesData.flavor_text_entries[0].flavor_text,
       color: fakeSpeciesData.color.name,
       gender: 'genderless',
-      capture_rate: 12,
-      base_happiness: 12,
-      is_legendary: true,
-      is_baby: true,
+      captureRate: 12,
+      baseHappiness: 12,
+      isLegendary: true,
+      isBaby: true,
     });
     renderWithRouter('/1');
 

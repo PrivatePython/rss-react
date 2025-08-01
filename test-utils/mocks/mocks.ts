@@ -45,15 +45,6 @@ export const fakeSpeciesData = {
 
 export const basicInfo = { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' };
 
-export const fakeBaseDataFor = {
-  id: 1,
-  name: 'bulbasaur',
-  sprites: { front_default: 'bulbasaur.png' },
-  types: [],
-  height: 62,
-  weight: 15,
-};
-
 export const fakeSpeciesDataWithoutDescriptionAndColor = {
   flavor_text_entries: [],
   color: { name: 'white' },
@@ -86,9 +77,9 @@ export const mockResults: IPokemonData[] = [
       url: 'https://pokeapi.co/api/v2/spcies/1/',
     },
     gender: 'genderless',
-    capture_rate: 12,
-    base_happiness: 12,
-    is_legendary: true,
-    is_baby: true,
+    captureRate: 12,
+    baseHappiness: 12,
+    isLegendary: true,
+    isBaby: true,
   },
 ];

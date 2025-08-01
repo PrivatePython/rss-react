@@ -10,7 +10,7 @@ const CardList: React.FC<ICardListProps> = ({ itemsList }) => {
   return (
     <div className="grid grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))] grid-flow-dense gap-2">
       {itemsList.map((item) => {
-        return <CardItem key={'cardItem-' + item.id} pokemonData={item} />;
+        return <CardItem key={'card-item-key-' + item.id} pokemonData={item} />;
       })}
     </div>
   );

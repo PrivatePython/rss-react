@@ -1,8 +1,4 @@
-import {
-  // getDataFromLocalStorage,
-  // saveDataInLocalStorage,
-  useLocalStorage,
-} from '../src/hooks/useLocalStorage.hooks.ts';
+import { useLocalStorage } from '../src/hooks/useLocalStorage.hooks.ts';
 import { renderHook } from '@testing-library/react';
 import { act } from 'react';
 

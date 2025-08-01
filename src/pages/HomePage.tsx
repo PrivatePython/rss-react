@@ -72,6 +72,7 @@ const HomePage: React.FC = () => {
       }));
     } catch (error) {
       const err = error as Error;
+      console.error('Error', error);
       setState((prevState) => ({
         ...prevState,
         isLoading: false,

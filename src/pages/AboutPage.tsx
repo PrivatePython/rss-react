@@ -27,10 +27,10 @@ const developerCard: IPokemonData = {
     { type: { name: 'and more...' } },
   ],
   gender: 'male',
-  capture_rate: 20,
-  base_happiness: 80,
-  is_legendary: true,
-  is_baby: false,
+  captureRate: 20,
+  baseHappiness: 80,
+  isLegendary: true,
+  isBaby: false,
 };
 
 const AboutPage: React.FC = () => {

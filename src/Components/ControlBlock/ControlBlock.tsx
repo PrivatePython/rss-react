@@ -6,10 +6,11 @@ import {
   type IPokemonBasicInfo,
   type IPokemonResponseData,
 } from '../../services/pokemon.service.ts';
+import BaseButton from '../BaseButton/BaseButton.tsx';
 
 interface IState {
-  allPokemon: IPokemonBasicInfo[];
-  filteredPokemon: IPokemonBasicInfo[];
+  allSuggestionsPokemonList: IPokemonBasicInfo[];
+  filteredSuggestionsPokemonList: IPokemonBasicInfo[];
   inputValue: string;
   selectedPokemon: string | null;
   error: string;
@@ -21,8 +22,8 @@ interface IControlBlockProps {
 }
 
 const initialState: IState = {
-  allPokemon: [],
-  filteredPokemon: [],
+  allSuggestionsPokemonList: [],
+  filteredSuggestionsPokemonList: [],
   inputValue: '',
   selectedPokemon: null,
   error: '',
@@ -33,32 +34,40 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
   const [state, setState] = useState<IState>({ ...initialState, inputValue: storageData ?? '' });
 
   useEffect(() => {
-    const getAllPokemonList = async () => {
+    const getAllSuggestionsPokemonList = async () => {
       try {
         const allPokemonData: IPokemonResponseData = await fetchPokemonResponseData(100000);
         setState((prevState: IState) => ({
           ...prevState,
-          allPokemon: allPokemonData.results,
+          allSuggestionsPokemonList: allPokemonData.results,
         }));
       } catch (error) {
-        console.log('Error loading list of Pokemon for helping search:', error);
+        let errorMessage = 'Error loading list of Pokemon for helping search: ';
+        console.error(errorMessage, error);
+        if (error instanceof Error) {
+          errorMessage += error.message;
+        }
+        setState((prevState: IState) => ({
+          ...prevState,
+          error: errorMessage,
+        }));
       }
     };
 
-    getAllPokemonList();
+    getAllSuggestionsPokemonList();
   }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    const filteredPokemon = state.allPokemon
+    const filteredSuggestionsPokemonList = state.allSuggestionsPokemonList
       .filter((p) => p.name.toLowerCase().startsWith(inputValue.toLowerCase()))
       .slice(0, 15);
 
     setState((prevState: IState) => ({
       ...prevState,
       inputValue: inputValue,
-      filteredPokemon: inputValue ? filteredPokemon : [],
+      filteredSuggestionsPokemonList: inputValue ? filteredSuggestionsPokemonList : [],
       selectedPokemon: null,
       error: '',
     }));
@@ -68,7 +77,7 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
     setState((prevState) => ({
       ...prevState,
       inputValue: name,
-      filteredPokemon: [],
+      filteredSuggestionsPokemonList: [],
     }));
   };
 
@@ -90,7 +99,7 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
       ...prevState,
       error: '',
       selectedPokemon: name,
-      filteredPokemon: [],
+      filteredSuggestionsPokemonList: [],
     }));
 
     searchPokemon(name);
@@ -103,11 +112,11 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
       selectedPokemon: null,
       error: '',
       inputValue: '',
-      filteredPokemon: [],
+      filteredSuggestionsPokemonList: [],
     }));
   };
 
-  const { inputValue, filteredPokemon, error } = state;
+  const { inputValue, filteredSuggestionsPokemonList, error } = state;
 
   return (
     <div className="flex flex-col gap-1 w-full max-w-2xl">
@@ -130,11 +139,11 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
           </button>
         </div>
 
-        {filteredPokemon.length > 0 && (
+        {filteredSuggestionsPokemonList.length > 0 && (
           <ul className="border rounded max-h-60 overflow-y-auto bg-white shadow">
-            {filteredPokemon.map((p) => (
+            {filteredSuggestionsPokemonList.map((p) => (
               <li
-                key={'filteredPokemon-' + p.name}
+                key={'filtered-suggestions-pokemon-key-' + p.name}
                 onClick={() => selectProposedOption(p.name)}
                 className="p-2 hover:bg-blue-100 cursor-pointer capitalize"
               >
@@ -151,13 +160,9 @@ const ControlBlock: React.FC<IControlBlockProps> = ({ searchPokemon, showAllPoke
         )}
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,_minmax(260px,_1fr))] grid-flow-dense gap-2">
-        <button
-          data-testid="show-all-pokemon-button"
-          className="cursor-pointer w-full rounded-md bg-blue-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-blue-500 focus:shadow-none active:bg-blue-300 hover:bg-blue-400 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-          onClick={showAllPokemon}
-        >
+        <BaseButton data-testid="show-all-pokemon-button" onClick={showAllPokemon}>
           Show All Pokemon
-        </button>
+        </BaseButton>
         <ErrorButton />
       </div>
     </div>

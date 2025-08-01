@@ -2,8 +2,13 @@ import { useState } from 'react';
 
 export function useLocalStorage<T>(key: string): [T | null, (value: T) => void] {
   const [data, setData] = useState<T | null>(() => {
-    const result = localStorage.getItem(key);
-    return result ? JSON.parse(result) : null;
+    try {
+      const result = localStorage.getItem(key);
+      return result ? JSON.parse(result) : null;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   });
 
   const saveData = (data: T) => {
