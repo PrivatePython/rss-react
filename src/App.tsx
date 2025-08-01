@@ -1,15 +1,10 @@
 import './App.css';
 import React from 'react';
-import HomePage from './pages/HomePage.tsx';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes.tsx';
 
-class App extends React.Component {
-  render() {
-    return (
-      <>
-        <HomePage />
-      </>
-    );
-  }
-}
+const App: React.FC = () => {
+  return <RouterProvider router={router} />;
+};
 
 export default App;

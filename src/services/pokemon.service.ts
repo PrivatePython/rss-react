@@ -5,7 +5,7 @@ export interface IPokemonResponseData {
   results: IPokemonBasicInfo[];
 }
 
-interface PokemonFull {
+interface IPokemonFull {
   id: number;
   name: string;
   sprites: {
@@ -14,11 +14,20 @@ interface PokemonFull {
   types: { type: { name: string } }[];
   height: number;
   weight: number;
+  species: {
+    name: string;
+    url: string;
+  };
 }
 
-export interface IPokemonData extends PokemonFull {
+export interface IPokemonData extends IPokemonFull {
   description?: string;
   color: string;
+  gender: string;
+  captureRate: number;
+  baseHappiness: number;
+  isLegendary: boolean;
+  isBaby: boolean;
 }
 
 export interface IPokemonBasicInfo {
@@ -46,8 +55,8 @@ export async function fetchPokemonDataList(
 
 export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemonData> {
   const pokemonRes = await fetch(item.url);
-  const baseData: PokemonFull = await pokemonRes.json();
-  const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${item.name}`);
+  const baseData: IPokemonFull = await pokemonRes.json();
+  const speciesRes = await fetch(baseData.species.url);
   const speciesData = await speciesRes.json();
   const flavor = speciesData.flavor_text_entries.find(
     (entry: {
@@ -64,6 +73,12 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     !speciesData.color?.name || speciesData.color.name === 'white'
       ? 'gray'
       : speciesData.color.name;
+  const gender =
+    speciesData.gender_rate === 8
+      ? 'female'
+      : speciesData.gender_rate === -1
+        ? 'genderless'
+        : 'male';
 
   return {
     name: baseData.name,
@@ -72,7 +87,13 @@ export async function fetchPokemonData(item: IPokemonBasicInfo): Promise<IPokemo
     types: baseData.types,
     height: baseData.height,
     weight: baseData.weight,
+    species: baseData.species,
     description,
     color,
+    gender,
+    captureRate: speciesData.capture_rate,
+    baseHappiness: speciesData.base_happiness,
+    isLegendary: speciesData.is_legendary,
+    isBaby: speciesData.is_baby,
   };
 }

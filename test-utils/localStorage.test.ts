@@ -1,29 +1,41 @@
-import { getDataFromLS, saveDataInLS } from '../src/helpers/localStorage.ts';
+import { useLocalStorage } from '../src/hooks/useLocalStorage.hooks.ts';
+import { renderHook } from '@testing-library/react';
+import { act } from 'react';
 
-describe('local storage', () => {
+describe('local storage custom hook', () => {
+  const localStorageKey = 'key';
+
   beforeEach(() => {
     localStorage.clear();
   });
 
+  it("should return null if data doesn't exists", () => {
+    const { result } = renderHook(() => useLocalStorage<string>(localStorageKey));
+
+    const [storedValue] = result.current;
+    expect(storedValue).toBeNull();
+  });
+
   it('should save data to local storage', () => {
-    const key = 'key';
     const value = 'value';
+    const { result } = renderHook(() => useLocalStorage<string>(localStorageKey));
+    const [, saveDataInLocalStorage] = result.current;
 
-    saveDataInLS(key, value);
+    act(() => {
+      saveDataInLocalStorage(value);
+    });
 
-    expect(localStorage.getItem(key)).toEqual(JSON.stringify(value));
+    expect(localStorage.getItem(localStorageKey)).toEqual(JSON.stringify(value));
   });
 
   it('should get existing data', () => {
-    const key = 'key';
     const value = 'value';
 
-    localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(localStorageKey, JSON.stringify(value));
 
-    expect(getDataFromLS(key)).toEqual(value);
-  });
+    const { result } = renderHook(() => useLocalStorage<string>(localStorageKey));
+    const [dataInLocalStorage] = result.current;
 
-  it("should return null if data doesn't exists", () => {
-    expect(getDataFromLS('nonExistingKey')).toBeNull();
+    expect(dataInLocalStorage).toEqual(value);
   });
 });

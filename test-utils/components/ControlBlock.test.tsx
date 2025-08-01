@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, vi } from 'vitest';
 import * as pokemonService from '../../src/services/pokemon.service';
-import * as storage from '../../src/helpers/localStorage.ts';
 import ControlBlock from '../../src/Components/ControlBlock/ControlBlock.tsx';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
@@ -22,7 +21,6 @@ describe('ControlBlock', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.spyOn(pokemonService, 'fetchPokemonResponseData').mockResolvedValue(mockPokemonList);
-    vi.spyOn(storage, 'getDataFromLS').mockReturnValue('');
   });
 
   it('should be render input, buttons and fetches pokemon list for suggestions', async () => {
@@ -85,8 +83,6 @@ describe('ControlBlock', () => {
   });
 
   it('should be searchPokemon with correct name and save in local storage', async () => {
-    const saveDataInLSSpy = vi.spyOn(storage, 'saveDataInLS');
-
     render(
       <ControlBlock searchPokemon={mockSearchPokemon} showAllPokemonList={mockShowAllPokemon} />
     );
@@ -98,7 +94,7 @@ describe('ControlBlock', () => {
     fireEvent.click(screen.getByTestId('search-pokemon-button'));
 
     await waitFor(() => {
-      expect(saveDataInLSSpy).toHaveBeenCalledWith('inputValue', 'pikachu');
+      expect(localStorage.getItem('inputValue')).toEqual(JSON.stringify('pikachu'));
       expect(mockSearchPokemon).toHaveBeenCalledWith('pikachu');
     });
   });
