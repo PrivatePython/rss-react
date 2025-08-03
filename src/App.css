@@ -3,4 +3,8 @@
   margin: 0 auto;
   text-align: center;
   height: 100vh;
+  background-image: url('../public/backgroundImage.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
